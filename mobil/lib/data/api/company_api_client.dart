@@ -3,15 +3,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 final class CompanyApiClient {
-  CompanyApiClient({this.baseUrl = ApiEndpoints.baseUrl})
-    : _dio = Dio(
+  CompanyApiClient({String? baseUrl})
+    : baseUrl = baseUrl ?? ApiEndpoints.baseUrl,
+      _dio = Dio(
         BaseOptions(
-          baseUrl: baseUrl,
+          baseUrl: baseUrl ?? ApiEndpoints.baseUrl,
           connectTimeout: const Duration(seconds: 12),
           receiveTimeout: const Duration(seconds: 12),
           headers: const {'Content-Type': 'application/json'},
         ),
       ) {
+    debugPrint('[CompanyApiClient] baseUrl=$baseUrl');
     _dio.interceptors.add(
       LogInterceptor(
         requestBody: true,
@@ -53,7 +55,7 @@ final class CompanyApiClient {
       ApiEndpoints.login,
       data: payload,
     );
-    return Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(response.data as Map<String, dynamic>);
   }
 
   Future<Map<String, dynamic>> googleLogin({required String idToken}) async {
@@ -61,7 +63,7 @@ final class CompanyApiClient {
       ApiEndpoints.googleLogin,
       data: <String, dynamic>{'idToken': idToken},
     );
-    return Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(response.data as Map<String, dynamic>);
   }
 
   Future<Map<String, dynamic>> register({
@@ -79,7 +81,7 @@ final class CompanyApiClient {
         'role': role,
       },
     );
-    return Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(response.data as Map<String, dynamic>);
   }
 
   Future<Map<String, dynamic>> updateProfile({
@@ -138,7 +140,7 @@ final class CompanyApiClient {
       },
       options: _authOptions,
     );
-    return Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(response.data as Map<String, dynamic>);
   }
 
   Future<Map<String, dynamic>> fetchProfile() async {
@@ -155,7 +157,7 @@ final class CompanyApiClient {
       options: _authOptions,
     );
     return (response.data as List<dynamic>)
-        .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+      .map((dynamic e) => Map<String, dynamic>.from(e as Map<String, dynamic>))
         .toList();
   }
 
@@ -165,7 +167,7 @@ final class CompanyApiClient {
       options: _authOptions,
     );
     return (response.data as List<dynamic>)
-        .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+      .map((dynamic e) => Map<String, dynamic>.from(e as Map<String, dynamic>))
         .toList();
   }
 
@@ -205,7 +207,7 @@ final class CompanyApiClient {
       },
       options: _authOptions,
     );
-    return Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(response.data as Map<String, dynamic>);
   }
 
   Future<Map<String, dynamic>> updateJob({
@@ -261,7 +263,7 @@ final class CompanyApiClient {
       data: <String, dynamic>{'jobId': jobId, 'userName': userName},
       options: _authOptions,
     );
-    return Map<String, dynamic>.from(response.data as Map);
+    return Map<String, dynamic>.from(response.data as Map<String, dynamic>);
   }
 
   Future<Map<String, dynamic>> updateApplicationStatus({
@@ -286,7 +288,7 @@ final class CompanyApiClient {
       options: _authOptions,
     );
     return (response.data as List<dynamic>)
-        .map((dynamic e) => Map<String, dynamic>.from(e as Map))
+      .map((dynamic e) => Map<String, dynamic>.from(e as Map<String, dynamic>))
         .toList();
   }
 

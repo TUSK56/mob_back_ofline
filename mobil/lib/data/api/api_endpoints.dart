@@ -1,13 +1,25 @@
-// Base URL placeholder and REST path constants for the backend.
+import 'package:flutter/foundation.dart';
+
+// Base URL and REST path constants for the backend.
 
 final class ApiEndpoints {
   const ApiEndpoints._();
 
-  // Render deployment URL (can be overridden at build time).
-  static const String baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'https://jobito.runasp.net',
-  );
+  // Local-first URL with platform-aware fallback.
+  // Can always be overridden via --dart-define=API_BASE_URL=...
+  static final String baseUrl = _resolveBaseUrl();
+
+  static String _resolveBaseUrl() {
+    const override = String.fromEnvironment('API_BASE_URL', defaultValue: '');
+    if (override.isNotEmpty) return override;
+    if (kIsWeb) return 'http://localhost:3000';
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      // Physical Android phone should use PC LAN IP.
+      // Override any time with: --dart-define=API_BASE_URL=http://<ip>:3000
+      return 'http://192.168.1.5:3000';
+    }
+    return 'http://192.168.1.5:3000';
+  }
 
   // Auth
   static const String login = '/api/auth/login';
